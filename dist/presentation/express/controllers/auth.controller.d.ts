@@ -1,0 +1,31 @@
+import { NextFunction, Request, Response } from "express";
+import { IAdminRegisterUseCase } from "../../../application/usecases/auth/interface/admin.register.interface";
+import { IResendAdminOtpUseCase } from "../../../application/usecases/auth/interface/resend.register.otp.interface";
+import { IVerifyOtpUseCase } from "../../../application/usecases/auth/interface/verifyadmin.otp.interface";
+import { ILoginUseCase } from "../../../application/usecases/auth/interface/login.interface";
+import { ILogoutUseCase } from "../../../application/usecases/auth/interface/logout.interface";
+import { IForgotPasswordUseCase } from "../../../application/usecases/auth/interface/forgot.password.interface";
+import { IVerifyForgotOtpUseCase } from "../../../application/usecases/auth/interface/verifyforgot.otp.interface";
+import { IResetPasswordUseCase } from "../../../application/usecases/auth/interface/reset.password.interface";
+import { ISetPassWordUseCase } from "../../../application/usecases/auth/interface/set.password.interface";
+export declare class AuthController {
+    private readonly _registerAdminUseCase;
+    private readonly _verifyOtpUseCase;
+    private readonly _resendAdminOtpUseCase;
+    private readonly _loginUseCase;
+    private readonly _logoutUseCase;
+    private readonly _forgotpasswordUseCase;
+    private readonly _resetPasswordUseCase;
+    private readonly _verifyForgotOtpUseCase;
+    private readonly _setPasswordUseCase;
+    constructor(_registerAdminUseCase: IAdminRegisterUseCase, _verifyOtpUseCase: IVerifyOtpUseCase, _resendAdminOtpUseCase: IResendAdminOtpUseCase, _loginUseCase: ILoginUseCase, _logoutUseCase: ILogoutUseCase, _forgotpasswordUseCase: IForgotPasswordUseCase, _resetPasswordUseCase: IResetPasswordUseCase, _verifyForgotOtpUseCase: IVerifyForgotOtpUseCase, _setPasswordUseCase: ISetPassWordUseCase);
+    register(req: Request, res: Response, next: NextFunction): Promise<Response<any, Record<string, any>> | undefined>;
+    verifyOtp(req: Request, res: Response, next: NextFunction): Promise<Response<any, Record<string, any>> | undefined>;
+    resendOtp(req: Request, res: Response, next: NextFunction): Promise<Response<any, Record<string, any>> | undefined>;
+    login(req: Request, res: Response, next: NextFunction): Promise<Response<any, Record<string, any>> | undefined>;
+    forgotPassword(req: Request, res: Response, next: NextFunction): Promise<Response<any, Record<string, any>> | undefined>;
+    verifyForgotOtp(req: Request, res: Response, next: NextFunction): Promise<void>;
+    resetPassword(req: Request, res: Response, next: NextFunction): Promise<Response<any, Record<string, any>> | undefined>;
+    setPassword(req: Request, res: Response, next: NextFunction): Promise<Response<any, Record<string, any>> | undefined>;
+    logout(req: Request, res: Response, next: NextFunction): Promise<void>;
+}
