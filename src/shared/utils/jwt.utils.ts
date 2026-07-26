@@ -1,42 +1,25 @@
 
-// import jwt, { Secret, SignOptions } from "jsonwebtoken";
-
-// type Payload = {
-//   userId: string;
-//   role: string;
-// };
-
-// export const generateAccessToken = (
-//   payload: Payload
-// ): string => {
-
-// const secret = process.env.JWT_ACCESS_SECRET;
-// if (!secret) throw new Error("JWT_ACCESS_SECRET is required");
-
-//   const options: SignOptions = {
-//     expiresIn:  "15m", 
-//   };
-
-//   return jwt.sign(payload, secret, options);
-// };
 
 import jwt from 'jsonwebtoken';
 import {logger} from '../logger/logger.js';
+import dotenv from 'dotenv'
+dotenv.config()
+
 
 export const generateAccessToken = (payload: object): string => {
-  const secret = process.env.JWT_ACCESS_SECRET || "access_secret";
-  return jwt.sign(payload, secret, { expiresIn: '15m' });
+  const secret = process.env.JWT_ACCESS_SECRET as string;
+  return jwt.sign(payload, secret, { expiresIn: process.env.JWT_ACCESS_EXPIRES as jwt.SignOptions['expiresIn'] });
 }
 
 export const generateRefreshToken = (payload: object): string => {
-  const secret = process.env.JWT_REFRESH_SECRET || "refresh_secret";
-  return jwt.sign(payload, secret, { expiresIn: '7d' });
+  const secret = process.env.JWT_REFRESH_SECRET as string;
+  return jwt.sign(payload, secret, { expiresIn: process.env.JWT_REFRESH_EXPIRES as jwt.SignOptions['expiresIn'] });
 }
 
-export const verifyAccessToken = (token: string, type: 'access' | 'refresh') => {
+export const verifyToken = (token: string, type: 'access' | 'refresh') => {
   const secret = type === 'access'
-    ? (process.env.JWT_ACCESS_SECRET || "access_secret")
-    : (process.env.JWT_REFRESH_SECRET || "refresh_secret");
+    ? (process.env.JWT_ACCESS_SECRET as string)
+    : (process.env.JWT_REFRESH_SECRET as string);
   try {
     return jwt.verify(token, secret); 
   } catch (err) {

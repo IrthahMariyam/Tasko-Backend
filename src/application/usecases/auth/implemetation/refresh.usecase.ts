@@ -3,7 +3,7 @@ import { IRefreshUseCase } from "../interface/refresh.interface";
 import { RefreshResult } from "../../../../domain/types/refresh.types";
 import { USER_TYPES } from "../../../../infrastructure/di/types/user/user.types";
 import { IUserRepository } from "../../../../domain/interfaces/IUserRepository";
-import { verifyAccessToken, generateAccessToken } from "../../../../shared/utils/jwt.utils";
+import { verifyToken, generateAccessToken } from "../../../../shared/utils/jwt.utils";
 import { redisClient } from "../../../../infrastructure/providers/redis/redis.provider";
 import { UnauthorizedError } from "../../../../shared/utils/error-handling/errors/unauthorized.error";
 import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
@@ -20,7 +20,7 @@ export class RefreshUseCase implements IRefreshUseCase {
             throw new UnauthorizedError("Refresh token is required");
         }
 
-        const decoded = verifyAccessToken(refreshToken, 'refresh') as { id: string; email: string; role: string } | undefined;
+        const decoded = verifyToken(refreshToken, 'refresh') as { id: string; email: string; role: string } | undefined;
         if (!decoded) {
             throw new UnauthorizedError("Invalid or expired refresh token");
         }

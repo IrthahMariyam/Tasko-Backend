@@ -9,12 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { injectable } from 'inversify';
 import { redisClient } from '../../../../infrastructure/providers/redis/redis.provider';
+import { verifyToken } from '../../../../shared/utils/jwt.utils';
 let LogoutUseCase = class LogoutUseCase {
     constructor() { }
     async execute(dto) {
         const { refreshToken } = dto;
         if (refreshToken) {
-            await redisClient.del(`refresh:${refreshToken}`);
+            const decoded = verifyToken(refreshToken, 'refresh');
+            if (decoded?.email) {
+                await redisClient.del(`refresh:${decoded.email}`);
+            }
         }
     }
 };

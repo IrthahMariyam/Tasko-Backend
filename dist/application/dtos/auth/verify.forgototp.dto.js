@@ -7,30 +7,25 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { IsEmail, IsString, Length } from "class-validator";
 import { Exclude, Expose } from "class-transformer";
+import { IsEmail, IsString, Length } from "class-validator";
 let VerifyForgotOtpDTO = class VerifyForgotOtpDTO {
     email;
     otp;
-    constructor() {
-        this.email = "";
-        this.otp = "";
-    }
 };
 __decorate([
     Expose(),
-    IsEmail({}, { message: "Invalid email format" }),
+    IsEmail({}, { message: "Enter a valid email address" }),
     __metadata("design:type", String)
 ], VerifyForgotOtpDTO.prototype, "email", void 0);
 __decorate([
     Expose(),
     IsString({ message: "OTP must be a string" }),
-    Length(6, 6, { message: "OTP must be  6 characters long" }),
+    Length(6, 6, { message: "OTP must be 6 digits" }),
     __metadata("design:type", String)
 ], VerifyForgotOtpDTO.prototype, "otp", void 0);
 VerifyForgotOtpDTO = __decorate([
-    Exclude(),
-    __metadata("design:paramtypes", [])
+    Exclude()
 ], VerifyForgotOtpDTO);
 export { VerifyForgotOtpDTO };
 //# sourceMappingURL=verify.forgototp.dto.js.map

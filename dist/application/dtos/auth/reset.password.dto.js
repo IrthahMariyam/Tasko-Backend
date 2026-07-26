@@ -7,52 +7,34 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Expose, } from "class-transformer";
-import { IsString, Matches, MaxLength, MinLength, Validate, ValidatorConstraint, IsEmail, } from "class-validator";
-let PasswordMatchConstraint = class PasswordMatchConstraint {
-    validate(confirmPassword, args) {
-        const obj = args.object;
-        return obj.newPassword === confirmPassword;
-    }
-    defaultMessage(args) {
-        return "Confirm password must match the new password";
-    }
-};
-PasswordMatchConstraint = __decorate([
-    ValidatorConstraint({ name: "passwordMatch", async: false })
-], PasswordMatchConstraint);
-export { PasswordMatchConstraint };
-export class ResetPasswordDTO {
+import { Exclude, Expose } from "class-transformer";
+import { IsEmail, IsString, Matches, MaxLength, MinLength } from "class-validator";
+let ResetPasswordDTO = class ResetPasswordDTO {
     email;
     newPassword;
     confirmPassword;
-    constructor() {
-        this.email = "";
-        this.newPassword = "";
-        this.confirmPassword = "";
-    }
-}
+};
 __decorate([
     Expose(),
-    IsEmail({}, { message: "Invalid email format" }),
+    IsEmail({}, { message: "Enter a valid email address" }),
     __metadata("design:type", String)
 ], ResetPasswordDTO.prototype, "email", void 0);
 __decorate([
     Expose(),
     IsString({ message: "Password must be a string" }),
-    MinLength(8, { message: "Password must be at least 8 characters long" }),
-    MaxLength(20, { message: "Password cannot be longer than 20 characters" }),
-    Matches(/^(?=.*[A-Z])(?=.*\d)/, {
-        message: "Password must contain at least one uppercase letter and one number",
-    }),
+    MinLength(8, { message: "Password must be at least 8 characters" }),
+    MaxLength(64, { message: "Password cannot exceed 64 characters" }),
+    Matches(/^(?=.*[A-Z])(?=.*\d)/, { message: "Password must contain 1 uppercase letter and 1 number" }),
     __metadata("design:type", String)
 ], ResetPasswordDTO.prototype, "newPassword", void 0);
 __decorate([
     Expose(),
     IsString({ message: "Confirm password must be a string" }),
-    MinLength(8, { message: "Confirm password must be at least 8 characters long" }),
-    MaxLength(20, { message: "Confirm password cannot be longer than 20 characters" }),
-    Validate(PasswordMatchConstraint),
+    MinLength(8, { message: "Confirm password must be at least 8 characters" }),
     __metadata("design:type", String)
 ], ResetPasswordDTO.prototype, "confirmPassword", void 0);
+ResetPasswordDTO = __decorate([
+    Exclude()
+], ResetPasswordDTO);
+export { ResetPasswordDTO };
 //# sourceMappingURL=reset.password.dto.js.map

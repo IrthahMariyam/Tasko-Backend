@@ -1,60 +1,42 @@
-import { ISetPassWordUseCase } from "../interface/set.password.interface";
-import {injectable,inject} from 'inversify'
-import { USER_TYPES } from "../../../../infrastructure/di/types/user/user.types";
-import { IUserRepository } from "../../../../domain/interfaces/IUserRepository";
-import { redisClient } from "../../../../infrastructure/providers/redis/redis.provider";
-import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
-import { ValidationError } from "../../../../shared/utils/error-handling/errors/validation.error";
-import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.message";
-import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message";
-import { hashPassword } from "../../../../shared/utils/password.hash.util";
+import { inject, injectable } from "inversify";
 import { User } from "../../../../domain/entities/User";
 import { UserRole } from "../../../../domain/enum/user/role.enum";
 import { UserStatus } from "../../../../domain/enum/user/status.enum";
+import { IUserRepository } from "../../../../domain/interfaces/IUserRepository";
+import { USER_TYPES } from "../../../../infrastructure/di/types/user/user.types";
+import { redisClient } from "../../../../infrastructure/providers/redis/redis.provider";
+import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.message";
+import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
+import { ValidationError } from "../../../../shared/utils/error-handling/errors/validation.error";
+import { hashPassword } from "../../../../shared/utils/password.hash.util";
+import { ISetPassWordUseCase } from "../interface/set.password.interface";
 
+type InvitePayload = { name: string; email: string; role: UserRole };
 
 @injectable()
-export class SetPasswordUseCase implements ISetPassWordUseCase{
+export class SetPasswordUseCase implements ISetPassWordUseCase {
+  constructor(@inject(USER_TYPES.IUserRepository) private readonly userRepository: IUserRepository) {}
 
-    constructor(
+  async execute(token: string, password: string, confirmPassword: string): Promise<{ message: string }> {
+    if (password !== confirmPassword) throw new ValidationError(ERROR_MESSAGE.PASSWORDS_DO_NOT_MATCH);
 
-        @inject(USER_TYPES.IUserRepository)
-        private _userRepository:IUserRepository
+    const key = `member.invite:${token}`;
+    const invitation = await redisClient.get(key);
+    if (!invitation) throw new NotFoundError(ERROR_MESSAGE.INVITATION_EXPIRED_OR_INVALID);
 
-    ){}
+    const { name, email, role } = JSON.parse(invitation) as InvitePayload;
+    if (await this.userRepository.findByEmail(email)) throw new ValidationError(ERROR_MESSAGE.EMAIL_ALREADY_EXISTS);
 
-    async execute(token: string,password: string,confirmPassword: string):Promise<{ message: string }>{
-        if(password !== confirmPassword){
-            throw new ValidationError(ERROR_MESSAGE.PASSWORDS_DO_NOT_MATCH)
-        }
+    await this.userRepository.create(User.create({
+      name,
+      email,
+      password: await hashPassword(password),
+      role,
+      status: UserStatus.ACTIVE,
+      isVerified: true,
+    }));
+    await redisClient.del(key);
 
-        const inviteKey = `member.invite:${token}`
-        const data = await redisClient.get(inviteKey)
-
-        if(!data){
-            throw new NotFoundError(ERROR_MESSAGE.INVITATION_EXPIRED_OR_INVALID)
-        }
-
-        const parsedData = JSON.parse(data)
-        const existing = await this._userRepository.findByEmail(parsedData.email)
-
-        if(existing){
-            throw new ValidationError(ERROR_MESSAGE.EMAIL_ALREADY_EXISTS)
-        }
-
-        const hashedPassword = await hashPassword(password)
-        const user = User.create({
-            name: parsedData.name,
-            email: parsedData.email,
-            password: hashedPassword,
-            role: parsedData.role === UserRole.ADMIN ? UserRole.ADMIN : UserRole.USER,
-            status: UserStatus.ACTIVE,
-            isVerified: true,
-        })
-
-        await this._userRepository.create(user)
-        await redisClient.del(inviteKey)
-
-        return { message: SUCCESS_MESSAGE.USER_CREATED }
-    }
+    return { message: "Password set successfully. You can now log in." };
+  }
 }

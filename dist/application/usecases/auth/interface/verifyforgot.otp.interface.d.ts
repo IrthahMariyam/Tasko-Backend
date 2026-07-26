@@ -1,6 +1,8 @@
-import { VerifyForgotOtpDTO } from "../../../dtos/auth/verify.forgototp.dto";
 export interface IVerifyForgotOtpUseCase {
-    execute(dto: VerifyForgotOtpDTO): Promise<{
+    execute(dto: {
+        email: string;
+        otp: string;
+    }): Promise<{
         message: string;
     }>;
 }

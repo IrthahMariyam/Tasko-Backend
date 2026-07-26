@@ -1,10 +1,13 @@
-import { IResetPasswordUseCase } from "../interface/reset.password.interface";
 import { IUserRepository } from "../../../../domain/interfaces/IUserRepository";
-import { ResetPasswordDTO } from "../../../dtos/auth/reset.password.dto";
+import { IResetPasswordUseCase } from "../interface/reset.password.interface";
 export declare class ResetPasswordUseCase implements IResetPasswordUseCase {
-    private _userRepository;
-    constructor(_userRepository: IUserRepository);
-    execute({ email, newPassword, confirmPassword }: ResetPasswordDTO): Promise<{
+    private readonly userRepository;
+    constructor(userRepository: IUserRepository);
+    execute({ email, newPassword, confirmPassword }: {
+        email: string;
+        newPassword: string;
+        confirmPassword: string;
+    }): Promise<{
         message: string;
     }>;
 }

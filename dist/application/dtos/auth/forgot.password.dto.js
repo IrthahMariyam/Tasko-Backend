@@ -7,17 +7,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Expose } from 'class-transformer';
-import { IsEmail } from 'class-validator';
-export class ForgotPasswordDTO {
+import { Exclude, Expose } from "class-transformer";
+import { IsEmail, IsNotEmpty } from "class-validator";
+let ForgotPasswordDTO = class ForgotPasswordDTO {
     email;
-    constructor() {
-        this.email = '';
-    }
-}
+};
 __decorate([
     Expose(),
-    IsEmail({}, { message: "Invalid email format" }),
+    IsEmail({}, { message: "Enter a valid email address" }),
+    IsNotEmpty({ message: "Email is required" }),
     __metadata("design:type", String)
 ], ForgotPasswordDTO.prototype, "email", void 0);
+ForgotPasswordDTO = __decorate([
+    Exclude()
+], ForgotPasswordDTO);
+export { ForgotPasswordDTO };
 //# sourceMappingURL=forgot.password.dto.js.map

@@ -1,9 +1,10 @@
 import "reflect-metadata";
 import express from "express";
-import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import dotenv from "dotenv";
 import connectDB from "../../../infrastructure/db/mongoose/connect.db";
 import { redisClient } from "../../../infrastructure/providers/redis/redis.provider";
 import { httpLogStream, logger } from "../../../shared/logger/logger";
@@ -22,6 +23,7 @@ app.use(cors({
 }));
 app.use(morgan("combined", { stream: httpLogStream }));
 app.use(express.json());
+app.use(cookieParser());
 app.get("/", (req, res) => {
     res.send("Tasko API Running...");
 });
@@ -36,6 +38,7 @@ app.use((error, req, res, next) => {
 });
 const startServer = async () => {
     await connectDB();
+    //await seedAdmin();
     await redisClient.connect();
     const port = process.env.PORT ?? 5000;
     app.listen(port, () => {

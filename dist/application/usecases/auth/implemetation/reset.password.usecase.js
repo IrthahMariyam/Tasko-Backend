@@ -10,43 +10,42 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { injectable, inject } from "inversify";
+import { inject, injectable } from "inversify";
+import { User } from "../../../../domain/entities/User";
+import { UserRole } from "../../../../domain/enum/user/role.enum";
 import { USER_TYPES } from "../../../../infrastructure/di/types/user/user.types";
+import { redisClient } from "../../../../infrastructure/providers/redis/redis.provider";
 import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.message";
-import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message";
 import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
 import { ValidationError } from "../../../../shared/utils/error-handling/errors/validation.error";
-import { User } from "../../../../domain/entities/User";
 import { hashPassword } from "../../../../shared/utils/password.hash.util";
-import { InternalLServerError } from "../../../../shared/utils/error-handling/errors/internal.server.error";
 let ResetPasswordUseCase = class ResetPasswordUseCase {
-    _userRepository;
-    constructor(_userRepository) {
-        this._userRepository = _userRepository;
+    userRepository;
+    constructor(userRepository) {
+        this.userRepository = userRepository;
     }
     async execute({ email, newPassword, confirmPassword }) {
-        if (newPassword !== confirmPassword) {
+        if (newPassword !== confirmPassword)
             throw new ValidationError(ERROR_MESSAGE.PASSWORDS_DO_NOT_MATCH);
-        }
-        const user = await this._userRepository.findByEmail(email);
-        if (!user) {
+        const normalizedEmail = email.toLowerCase().trim();
+        if (await redisClient.get(`forgot-reset:${normalizedEmail}`) !== "verified")
+            throw new ValidationError("Verify the OTP before resetting your password.");
+        const user = await this.userRepository.findByEmail(normalizedEmail);
+        if (!user)
             throw new NotFoundError(ERROR_MESSAGE.USER_NOT_FOUND);
-        }
-        const hashedPassword = await hashPassword(newPassword);
-        const newData = User.create({
+        if (user.role === UserRole.ADMIN)
+            throw new ValidationError("Admins can't change their password.");
+        await this.userRepository.update(User.create({
             id: user.id,
             name: user.name,
             email: user.email,
-            password: hashedPassword,
+            password: await hashPassword(newPassword),
             role: user.role,
             status: user.status,
-            isVerified: true,
-        });
-        const result = await this._userRepository.update(newData);
-        if (!result) {
-            throw new InternalLServerError(ERROR_MESSAGE.SERVER_ERROR);
-        }
-        return { message: SUCCESS_MESSAGE.PASSWORD_RESET };
+            isVerified: user.isVerified,
+        }));
+        await redisClient.del(`forgot-reset:${normalizedEmail}`);
+        return { message: "Password reset successfully" };
     }
 };
 ResetPasswordUseCase = __decorate([

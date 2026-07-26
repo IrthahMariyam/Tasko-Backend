@@ -15,16 +15,18 @@
 // };
 import jwt from 'jsonwebtoken';
 import { logger } from '../logger/logger.js';
-const access_secret = process.env.JWT_ACCESS_SECRET || "access_secret";
-const refresh_secret = process.env.JWT_REFRESH_SECRET || "refresh_secret";
 export const generateAccessToken = (payload) => {
-    return jwt.sign(payload, access_secret, { expiresIn: '15m' });
+    const secret = process.env.JWT_ACCESS_SECRET || "access_secret";
+    return jwt.sign(payload, secret, { expiresIn: '15m' });
 };
 export const generateRefreshToken = (payload) => {
-    return jwt.sign(payload, refresh_secret, { expiresIn: '7d' });
+    const secret = process.env.JWT_REFRESH_SECRET || "refresh_secret";
+    return jwt.sign(payload, secret, { expiresIn: '7d' });
 };
-export const verifyAccessToken = (token, type) => {
-    const secret = type === 'access' ? access_secret : refresh_secret;
+export const verifyToken = (token, type) => {
+    const secret = type === 'access'
+        ? (process.env.JWT_ACCESS_SECRET || "access_secret")
+        : (process.env.JWT_REFRESH_SECRET || "refresh_secret");
     try {
         return jwt.verify(token, secret);
     }

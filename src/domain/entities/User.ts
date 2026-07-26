@@ -15,14 +15,14 @@ export class User {
     public updatedAt: Date = new Date();
 
     constructor(props:{
-         readonly id?:string;
+        readonly id?:string;
         name:string;
         email:string;
         password:string;
         role:UserRole;
         status:UserStatus;
-         isVerified?: boolean ;
-         createdAt?: Date ;
+        isVerified?: boolean ;
+        createdAt?: Date ;
         updatedAt?: Date ;
 
 
@@ -41,14 +41,14 @@ export class User {
     id?:string,
     name:string;
     email:string;
-      password:string;
-        role:UserRole;
-        status:UserStatus;
-         isVerified: boolean ;
+    password:string;
+    role:UserRole;
+    status:UserStatus;
+    isVerified: boolean ;
        
 
  }):User{
-    return new User({
+      return new User({
         id:props.id,
         name:props.name,
         email:props.email,
@@ -61,9 +61,9 @@ export class User {
     })
  }
 
- get id(){return this._id;}
-get name(){ return this._name;}
- get email() { return this._email; }
+  get id(){return this._id;}
+  get name(){ return this._name;}
+  get email() { return this._email; }
   get password() { return this._password; }
   get role() { return this._role; }
   get status() { return this._status; }

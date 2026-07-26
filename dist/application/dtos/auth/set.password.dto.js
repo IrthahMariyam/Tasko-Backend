@@ -7,8 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+import { IsNotEmpty, IsString, MinLength } from "class-validator";
 import { Exclude, Expose } from "class-transformer";
-import { IsString, MinLength, MaxLength, Matches, IsNotEmpty, } from "class-validator";
 let SetPasswordDTO = class SetPasswordDTO {
     token;
     password;
@@ -17,23 +17,19 @@ let SetPasswordDTO = class SetPasswordDTO {
 __decorate([
     Expose(),
     IsString(),
-    IsNotEmpty({ message: "Token is required" }),
+    IsNotEmpty(),
     __metadata("design:type", String)
 ], SetPasswordDTO.prototype, "token", void 0);
 __decorate([
     Expose(),
     IsString(),
-    MinLength(8, { message: "Password must be at least 8 characters long" }),
-    MaxLength(20, { message: "Password cannot exceed 20 characters" }),
-    Matches(/^(?=.*[A-Z])(?=.*\d)/, {
-        message: "Password must contain 1 uppercase letter and 1 number",
-    }),
+    MinLength(8),
     __metadata("design:type", String)
 ], SetPasswordDTO.prototype, "password", void 0);
 __decorate([
     Expose(),
     IsString(),
-    MinLength(8, { message: "Confirm password must be at least 8 characters long" }),
+    MinLength(8),
     __metadata("design:type", String)
 ], SetPasswordDTO.prototype, "confirmPassword", void 0);
 SetPasswordDTO = __decorate([

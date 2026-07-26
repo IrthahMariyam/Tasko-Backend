@@ -3,8 +3,9 @@ export declare const AUTH_TYPES: {
     AuthController: symbol;
     IVerifyOtpUseCase: symbol;
     ILogoutUseCase: symbol;
-    IForgotPasswordUseCase: symbol;
-    IResetPasswordUseCase: symbol;
-    IVerifyForgotOtpUseCase: symbol;
     ISetPasswordUseCase: symbol;
+    IRefreshUseCase: symbol;
+    IForgotPasswordUseCase: symbol;
+    IVerifyForgotOtpUseCase: symbol;
+    IResetPasswordUseCase: symbol;
 };
