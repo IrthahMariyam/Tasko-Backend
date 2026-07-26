@@ -100137,3 +100137,13 @@
 {"level":"info","message":"Invite email sent to %s","timestamp":"2026-06-09 14:15:34"}
 {"level":"info","message":"Invite email sent to %s","timestamp":"2026-06-09 14:20:13"}
 {"level":"info","message":"Invite email sent to %s","timestamp":"2026-06-09 14:28:36"}
+{"level":"info","message":"MongoDB connection starting","timestamp":"2026-07-26 18:44:14"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2026-07-26 18:44:14"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-26 18:44:14"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-26 18:44:15"}
+{"level":"info","message":"Server running on 5000 ","timestamp":"2026-07-26 18:44:15"}
+{"level":"info","message":"MongoDB connection starting","timestamp":"2026-07-26 18:44:18"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2026-07-26 18:44:18"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-26 18:44:18"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-26 18:44:18"}
+{"level":"info","message":"Server running on 5000 ","timestamp":"2026-07-26 18:44:18"}
