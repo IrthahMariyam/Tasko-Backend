@@ -8,6 +8,7 @@ import { redisClient } from "../../../../infrastructure/providers/redis/redis.pr
 import { UnauthorizedError } from "../../../../shared/utils/error-handling/errors/unauthorized.error";
 import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
 import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.message";
+import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message";
 
 @injectable()
 export class RefreshUseCase implements IRefreshUseCase {
@@ -17,18 +18,18 @@ export class RefreshUseCase implements IRefreshUseCase {
 
     async execute(refreshToken: string): Promise<RefreshResult> {
         if (!refreshToken) {
-            throw new UnauthorizedError("Refresh token is required");
+            throw new UnauthorizedError(ERROR_MESSAGE.REFRESH_TOKEN_REQUIRED);
         }
 
         const decoded = verifyToken(refreshToken, 'refresh') as { id: string; email: string; role: string } | undefined;
         if (!decoded) {
-            throw new UnauthorizedError("Invalid or expired refresh token");
+            throw new UnauthorizedError(ERROR_MESSAGE.INVALID_REFRESH_TOKEN);
         }
 
         // Check if the refresh token matches what we have in Redis
         const storedToken = await redisClient.get(`refresh:${decoded.email}`);
         if (!storedToken || storedToken !== refreshToken) {
-            throw new UnauthorizedError("Refresh token has been invalidated or expired");
+            throw new UnauthorizedError(ERROR_MESSAGE.REFRESH_TOKEN_INVALIDATED);
         }
 
         const user = await this._userRepository.findByEmail(decoded.email);
@@ -43,7 +44,7 @@ export class RefreshUseCase implements IRefreshUseCase {
         const accessToken = generateAccessToken(payload);
 
         return {
-            message: "Token refreshed successfully",
+            message: SUCCESS_MESSAGE.TOKEN_REFRESHED_SUCCESS,
             accessToken
         };
     }

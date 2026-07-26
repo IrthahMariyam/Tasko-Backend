@@ -34,7 +34,7 @@ export class AdminController {
             if (req.user?.role !== "ADMIN") {
                 return res.status(CLIENT_ERROR_STATUS.FORBIDDEN).json({
                     success: false,
-                    message: "Only admins can invite members"
+                    message: ERROR_MESSAGE.ONLY_ADMINS_CAN_INVITE_MEMBERS
                 })
             }
 
@@ -64,7 +64,7 @@ export class AdminController {
             if (!token) {
                 return res.status(CLIENT_ERROR_STATUS.BAD_REQUEST).json({
                     success: false,
-                    message: "Tocken is Expired"
+                    message: ERROR_MESSAGE.INVITATION_EXPIRED_OR_INVALID
                 })
             }
 
@@ -85,7 +85,7 @@ export class AdminController {
             if (req.user?.role !== "ADMIN") {
                 return res.status(CLIENT_ERROR_STATUS.FORBIDDEN).json({
                     success: false,
-                    message: "Only admins can view members"
+                    message: ERROR_MESSAGE.ONLY_ADMINS_CAN_VIEW_MEMBERS
                 });
             }
 

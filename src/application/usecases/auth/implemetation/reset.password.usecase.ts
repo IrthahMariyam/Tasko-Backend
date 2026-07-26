@@ -7,6 +7,7 @@ import { redisClient } from "../../../../infrastructure/providers/redis/redis.pr
 import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.message";
 import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
 import { ValidationError } from "../../../../shared/utils/error-handling/errors/validation.error";
+import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message";
 import { hashPassword } from "../../../../shared/utils/password.hash.util";
 import { IResetPasswordUseCase } from "../interface/reset.password.interface";
 
@@ -17,11 +18,11 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase {
   async execute({ email, newPassword, confirmPassword }: { email: string; newPassword: string; confirmPassword: string }): Promise<{ message: string }> {
     if (newPassword !== confirmPassword) throw new ValidationError(ERROR_MESSAGE.PASSWORDS_DO_NOT_MATCH);
     const normalizedEmail = email.toLowerCase().trim();
-    if (await redisClient.get(`forgot-reset:${normalizedEmail}`) !== "verified") throw new ValidationError("Verify the OTP before resetting your password.");
+    if (await redisClient.get(`forgot-reset:${normalizedEmail}`) !== "verified") throw new ValidationError(ERROR_MESSAGE.OTP_VERIFICATION_REQUIRED);
 
     const user = await this.userRepository.findByEmail(normalizedEmail);
     if (!user) throw new NotFoundError(ERROR_MESSAGE.USER_NOT_FOUND);
-    if (user.role === UserRole.ADMIN) throw new ValidationError("Admins can't change their password.");
+    if (user.role === UserRole.ADMIN) throw new ValidationError(ERROR_MESSAGE.ADMINS_CANNOT_CHANGE_PASSWORD);
 
     await this.userRepository.update(User.create({
       id: user.id,
@@ -33,6 +34,6 @@ export class ResetPasswordUseCase implements IResetPasswordUseCase {
       isVerified: user.isVerified,
     }));
     await redisClient.del(`forgot-reset:${normalizedEmail}`);
-    return { message: "Password reset successfully" };
+    return { message: SUCCESS_MESSAGE.PASSWORD_RESET_SUCCESS };
   }
 }

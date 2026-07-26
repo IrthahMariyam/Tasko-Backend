@@ -6,6 +6,7 @@ import { redisClient } from "../../../../infrastructure/providers/redis/redis.pr
 import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.message";
 import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
 import { ValidationError } from "../../../../shared/utils/error-handling/errors/validation.error";
+import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message";
 import { generateOTP } from "../../../../shared/utils/otp.generate.util";
 import { sendOTP } from "../../../../shared/utils/send.otp.util";
 import { IForgotPasswordUseCase } from "../interface/forgot.password.interface";
@@ -18,11 +19,11 @@ export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
     const normalizedEmail = email.toLowerCase().trim();
     const user = await this.userRepository.findByEmail(normalizedEmail);
     if (!user) throw new NotFoundError(ERROR_MESSAGE.USER_NOT_FOUND);
-    if (user.role === UserRole.ADMIN) throw new ValidationError("Admins can't change their password.");
+    if (user.role === UserRole.ADMIN) throw new ValidationError(ERROR_MESSAGE.ADMINS_CANNOT_CHANGE_PASSWORD);
 
     const otp = generateOTP();
     await redisClient.set(`forgot-otp:${normalizedEmail}`, otp, "EX", 15 * 60);
     await sendOTP(normalizedEmail, otp);
-    return { message: "OTP sent to your email" };
+    return { message: SUCCESS_MESSAGE.OTP_SENT };
   }
 }

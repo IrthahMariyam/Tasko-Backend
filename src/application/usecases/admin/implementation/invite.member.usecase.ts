@@ -4,6 +4,7 @@ import { USER_TYPES } from "../../../../infrastructure/di/types/user/user.types"
 import { IUserRepository } from "../../../../infrastructure/db/repository/interface/user.interface"; 
 import { InviteMemberDTO } from "../../../dtos/admin/invite.member.dto";
 import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.message";
+import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message";
 import crypto from "crypto";
 import { User } from "../../../../domain/entities/User";
 import { redisClient } from "../../../../infrastructure/providers/redis/redis.provider";
@@ -48,7 +49,7 @@ export class InviteMemberUseCase implements IInviteMemberUseCase {
         await sendInviteEmail(email, inviteLink)
 
         return {
-            message: "Invitation  send successfully",
+            message: SUCCESS_MESSAGE.INVITATION_SENT,
             inviteLink: inviteLink
         }
     }

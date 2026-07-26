@@ -1,2 +1,41 @@
-/nodemodules
+# Dependencies
+/node_modules/
+
+# Build output
+/dist/
+*.tsbuildinfo
+
+# Environment files 
 .env
+
+# Build
+dist/
+build/
+
+# Logs
+/logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test coverage and temporary files
+/coverage/
+/.nyc_output/
+*.tmp
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+
+# TypeScript
+*.tsbuildinfo
+
+# ESLint
+.eslintcache
+

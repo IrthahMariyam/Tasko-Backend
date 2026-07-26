@@ -5,6 +5,7 @@ import {
 } from "express";
 
 import jwt from "jsonwebtoken";
+import { ERROR_MESSAGE } from "../../../shared/constants/messages/error.message";
 
 export const authMiddleware = (
  req: Request,
@@ -24,7 +25,7 @@ export const authMiddleware = (
    ) {
      return res.status(401)
      .json({
-       message: "Unauthorized"
+       message: ERROR_MESSAGE.UNAUTHORIZED
      });
    }
 
@@ -48,6 +49,6 @@ export const authMiddleware = (
  } catch (error) {
 
    return res.status(401)
-   .json({  message: "Invalid token" });
+   .json({ message: ERROR_MESSAGE.INVALID_TOKEN });
  }
 };

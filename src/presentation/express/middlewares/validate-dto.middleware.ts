@@ -2,6 +2,7 @@ import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { NextFunction, Request, Response } from "express";
 import { CLIENT_ERROR_STATUS } from "../../../shared/constants/status-code/client-error.status";
+import { ERROR_MESSAGE } from "../../../shared/constants/messages/error.message";
 
 type DtoClass<T extends object> = new () => T;
 
@@ -23,7 +24,7 @@ export const validateDto =
       );
 
       return res.status(CLIENT_ERROR_STATUS.BAD_REQUEST).json({
-        message: "Validation failed",
+        message: ERROR_MESSAGE.VALIDATION_FAILED,
         errors: messages,
       });
     }

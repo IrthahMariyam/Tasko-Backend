@@ -8,6 +8,7 @@ import { redisClient } from "../../../../infrastructure/providers/redis/redis.pr
 import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.message";
 import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
 import { ValidationError } from "../../../../shared/utils/error-handling/errors/validation.error";
+import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message";
 import { hashPassword } from "../../../../shared/utils/password.hash.util";
 import { ISetPassWordUseCase } from "../interface/set.password.interface";
 
@@ -37,6 +38,6 @@ export class SetPasswordUseCase implements ISetPassWordUseCase {
     }));
     await redisClient.del(key);
 
-    return { message: "Password set successfully. You can now log in." };
+    return { message: SUCCESS_MESSAGE.PASSWORD_SET_SUCCESS };
   }
 }
