@@ -3,9 +3,9 @@ export const AUTH_TYPES={
     AuthController: Symbol.for('AuthController'),
     IVerifyOtpUseCase:Symbol.for('IVerifyOtpUseCase'),
     ILogoutUseCase:Symbol.for('ILogoutUseCase'),
-    IForgotPasswordUseCase:Symbol.for('IForgotPasswordUseCase'),
-    IResetPasswordUseCase:Symbol.for('IResetPasswordUseCase'),
-    IVerifyForgotOtpUseCase:Symbol.for('IVerifyForgotOtpUseCase'),
     ISetPasswordUseCase:Symbol.for('ISetPasswordUseCase'),
     IRefreshUseCase: Symbol.for('IRefreshUseCase'),
+    IForgotPasswordUseCase: Symbol.for('IForgotPasswordUseCase'),
+    IVerifyForgotOtpUseCase: Symbol.for('IVerifyForgotOtpUseCase'),
+    IResetPasswordUseCase: Symbol.for('IResetPasswordUseCase'),
 }

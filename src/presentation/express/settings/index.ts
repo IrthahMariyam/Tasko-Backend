@@ -1,18 +1,20 @@
 
-
-import "./loadEnv";
 import "reflect-metadata";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import dotenv from "dotenv";
 import connectDB from "../../../infrastructure/db/mongoose/connect.db";
+import { seedAdmin } from "../../../infrastructure/db/seed/admin.seed";
 import { redisClient } from "../../../infrastructure/providers/redis/redis.provider";
 import { httpLogStream, logger } from "../../../shared/logger/logger";
 import { authRouter } from "../routes/auth.routes";
 import { adminRouter } from "../routes/admin.routes";
 import { Request,Response,NextFunction } from "express";
+
+dotenv.config();
 
 
 const app = express();
@@ -49,6 +51,7 @@ app.use((error: Error & { statusCode?: number; data?: unknown }, req: Request, r
 
 const startServer = async () => {
   await connectDB();
+  await seedAdmin();
   await redisClient.connect();
 
   const port = process.env.PORT ?? 5000;

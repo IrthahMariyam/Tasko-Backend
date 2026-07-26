@@ -1,15 +1,10 @@
-import { Expose } from 'class-transformer';
-import { IsEmail } from 'class-validator'
+import { Exclude, Expose } from "class-transformer";
+import { IsEmail, IsNotEmpty } from "class-validator";
 
+@Exclude()
 export class ForgotPasswordDTO {
-
-    @Expose()
-    @IsEmail({}, { message: "Invalid email format" })
-    email: string;
-
-    constructor() {
-        this.email = ''
-    }
-
+  @Expose()
+  @IsEmail({}, { message: "Enter a valid email address" })
+  @IsNotEmpty({ message: "Email is required" })
+  email!: string;
 }
-

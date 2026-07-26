@@ -1,8 +1,0 @@
-export const SERVER_ERROR_STATUS = {
-    INTERNAL_SERVER_ERROR: 500,
-    NOT_IMPLEMENTED: 501,
-    BAD_GATEWAY: 502,
-    SERVICE_UNAVAILABLE: 503,
-    GATEWAY_TIMEOUT: 504,
-};
-//# sourceMappingURL=server-error.status.js.map
