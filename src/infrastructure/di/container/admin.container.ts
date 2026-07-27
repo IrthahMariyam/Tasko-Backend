@@ -6,6 +6,8 @@ import { IVerifyInvitationUseCase } from "../../../application/usecases/admin/in
 import { VerifyInvitationUseCase } from "../../../application/usecases/admin/implementation/verify.member.usecase";
 import { IListMembersUseCase } from "../../../application/usecases/admin/interface/list.members.interface";
 import { ListMembersUseCase } from "../../../application/usecases/admin/implementation/list.members.usecase";
+import { IUpdateMemberStatusUseCase } from "../../../application/usecases/admin/interface/update.member.interface";
+import { UpdateMemberStatusUseCase } from "../../../application/usecases/admin/implementation/update.member.usecase";
 import { AdminController } from "../../../presentation/express/controllers/admin.controllers";
 
 
@@ -13,6 +15,7 @@ export const AdminModule = new ContainerModule(({bind})=>{
 bind<IInviteMemberUseCase>(ADMIN_TYPES.IInviteMemberUseCase).to(InviteMemberUseCase)
 bind<IVerifyInvitationUseCase>(ADMIN_TYPES.IVerifyInvitationUseCase).to(VerifyInvitationUseCase)
 bind<IListMembersUseCase>(ADMIN_TYPES.IListMembersUseCase).to(ListMembersUseCase)
+bind<IUpdateMemberStatusUseCase>(ADMIN_TYPES.IUpdateMemberStatusUseCase).to(UpdateMemberStatusUseCase)
 bind<AdminController>(ADMIN_TYPES.AdminController).to(AdminController)
 
 });

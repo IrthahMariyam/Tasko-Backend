@@ -11,14 +11,18 @@ export class ListMembersUseCase implements IListMembersUseCase {
         private readonly _userRepository: IUserRepository
     ) {}
 
-    async execute(): Promise<{ data: Array<{ name: string; email: string; role: string; status: UserStatus; }> }> {
-        const users = await this._userRepository.findAll();
-        const data = users.map(user => ({
+    async execute(opts: { page?: number; limit?: number; search?: string } = {}): Promise<{ data: Array<{ id: string; name: string; email: string; role: string; status: UserStatus; }>; total: number; page: number; limit: number }> {
+        const page = opts.page && opts.page > 0 ? opts.page : 1;
+        const limit = opts.limit && opts.limit > 0 ? opts.limit : 50;
+        const { items, total } = await this._userRepository.findWithQuery({ page, limit, search: opts.search });
+        const data = items.map((user) => ({
+            id: user.id ?? "",
             name: user.name,
             email: user.email,
             role: user.role,
-            status: user.status
+            status: user.status,
         }));
-        return { data };
+
+        return { data, total, page, limit };
     }
 }

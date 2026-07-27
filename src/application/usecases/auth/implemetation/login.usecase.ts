@@ -11,6 +11,7 @@ import { ValidationError } from "../../../../shared/utils/error-handling/errors/
 import { redisClient } from "../../../../infrastructure/providers/redis/redis.provider";
 import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message";
 import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
+import { UserStatus } from "../../../../domain/enum/user/status.enum";
 
 const REFRESH_TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60
 
@@ -24,7 +25,15 @@ export class LoginUseCase implements ILoginUseCase{
                 const email=dto.email.toLowerCase().trim()
                 const user = await this._userRepository.findByEmail(email)
                 if(!user) throw new NotFoundError(ERROR_MESSAGE.USER_NOT_FOUND)
-                if(!user.isVerified) throw new Error(ERROR_MESSAGE.USER_NOT_VERIFIED_OR_BLOCKED)
+
+                if (user.status === UserStatus.BLOCKED) {
+                    throw new ValidationError(ERROR_MESSAGE.ADMIN_BLOCKED)
+                }
+
+                if (!user.isVerified || user.status !== UserStatus.ACTIVE) {
+                    throw new ValidationError(ERROR_MESSAGE.USER_NOT_VERIFIED_OR_BLOCKED)
+                }
+
                 const isPassword= await comparePassword(dto.password, user.password)
                      if (!isPassword) throw new ValidationError(ERROR_MESSAGE.INVALID_PASSWORD)
                          const payload = { id: user.id, email: user.email, role: user.role }

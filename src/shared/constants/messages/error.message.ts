@@ -13,6 +13,7 @@ export const ERROR_MESSAGE = {
   INVITATION_EXPIRED_OR_INVALID: "Invitation expired or invalid token",
   UNAUTHORIZED: "Unauthorized",
   INVALID_TOKEN: "Invalid token",
+  INVALID_USER_ID: "Invalid user id",
   VALIDATION_FAILED: "Validation failed",
   ONLY_ADMINS_CAN_INVITE_MEMBERS: "Only admins can invite members",
   ONLY_ADMINS_CAN_VIEW_MEMBERS: "Only admins can view members",

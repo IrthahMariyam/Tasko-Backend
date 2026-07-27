@@ -9,6 +9,7 @@ import { UnauthorizedError } from "../../../../shared/utils/error-handling/error
 import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
 import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.message";
 import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message";
+import { UserStatus } from "../../../../domain/enum/user/status.enum";
 
 @injectable()
 export class RefreshUseCase implements IRefreshUseCase {
@@ -36,7 +37,12 @@ export class RefreshUseCase implements IRefreshUseCase {
         if (!user) {
             throw new NotFoundError(ERROR_MESSAGE.USER_NOT_FOUND);
         }
-        if (!user.isVerified) {
+
+        if (user.status === UserStatus.BLOCKED) {
+            throw new UnauthorizedError(ERROR_MESSAGE.ADMIN_BLOCKED);
+        }
+
+        if (!user.isVerified || user.status !== UserStatus.ACTIVE) {
             throw new UnauthorizedError(ERROR_MESSAGE.USER_NOT_VERIFIED_OR_BLOCKED);
         }
 
