@@ -5,11 +5,13 @@ import { UserModel } from "../models/user.model";
 import { hashPassword } from "../../../shared/utils/password.hash.util";
 import { logger } from "../../../shared/logger/logger";
 
-const requiredSettings = ["ADMIN_NAME", "ADMIN_EMAIL", "ADMIN_PASSWORD"] as const;
+const requiredSettings = [
+  "ADMIN_NAME",
+  "ADMIN_EMAIL",
+  "ADMIN_PASSWORD",
+] as const;
 
 export const seedAdmin = async (): Promise<void> => {
- 
-
   const name = process.env.ADMIN_NAME!.trim();
   const email = process.env.ADMIN_EMAIL!.trim().toLowerCase();
   const existingAdmin = await UserModel.findOne({ email }).lean();

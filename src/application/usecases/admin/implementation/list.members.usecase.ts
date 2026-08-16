@@ -6,23 +6,40 @@ import { UserStatus } from "../../../../domain/enum/user/status.enum";
 
 @injectable()
 export class ListMembersUseCase implements IListMembersUseCase {
-    constructor(
-        @inject(USER_TYPES.IUserRepository)
-        private readonly _userRepository: IUserRepository
-    ) {}
+  constructor(
+    @inject(USER_TYPES.IUserRepository)
+    private readonly _userRepository: IUserRepository,
+  ) {}
 
-    async execute(opts: { page?: number; limit?: number; search?: string } = {}): Promise<{ data: Array<{ id: string; name: string; email: string; role: string; status: UserStatus; }>; total: number; page: number; limit: number }> {
-        const page = opts.page && opts.page > 0 ? opts.page : 1;
-        const limit = opts.limit && opts.limit > 0 ? opts.limit : 50;
-        const { items, total } = await this._userRepository.findWithQuery({ page, limit, search: opts.search });
-        const data = items.map((user) => ({
-            id: user.id ?? "",
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            status: user.status,
-        }));
+  async execute(
+    opts: { page?: number; limit?: number; search?: string } = {},
+  ): Promise<{
+    data: Array<{
+      id: string;
+      name: string;
+      email: string;
+      role: string;
+      status: UserStatus;
+    }>;
+    total: number;
+    page: number;
+    limit: number;
+  }> {
+    const page = opts.page && opts.page > 0 ? opts.page : 1;
+    const limit = opts.limit && opts.limit > 0 ? opts.limit : 50;
+    const { items, total } = await this._userRepository.findWithQuery({
+      page,
+      limit,
+      search: opts.search,
+    });
+    const data = items.map((user) => ({
+      id: user.id ?? "",
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+    }));
 
-        return { data, total, page, limit };
-    }
+    return { data, total, page, limit };
+  }
 }

@@ -13,16 +13,26 @@ import { IForgotPasswordUseCase } from "../interface/forgot.password.interface";
 
 @injectable()
 export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
-  constructor(@inject(USER_TYPES.IUserRepository) private readonly userRepository: IUserRepository) {}
+  constructor(
+    @inject(USER_TYPES.IUserRepository)
+    private readonly userRepository: IUserRepository,
+  ) {}
 
   async execute({ email }: { email: string }): Promise<{ message: string }> {
     const normalizedEmail = email.toLowerCase().trim();
     const user = await this.userRepository.findByEmail(normalizedEmail);
     if (!user) throw new NotFoundError(ERROR_MESSAGE.USER_NOT_FOUND);
-    if (user.role === UserRole.ADMIN) throw new ValidationError(ERROR_MESSAGE.ADMINS_CANNOT_CHANGE_PASSWORD);
+    if (user.role === UserRole.ADMIN)
+      throw new ValidationError(ERROR_MESSAGE.ADMINS_CANNOT_CHANGE_PASSWORD);
 
     const otp = generateOTP();
-    await redisClient.set(`forgot-otp:${normalizedEmail}`, otp, "EX", 15 * 60);
+    const otpExpires = Number(process.env.FORGOT_OTP_EXPIRES);
+    await redisClient.set(
+      `forgot-otp:${normalizedEmail}`,
+      otp,
+      "EX",
+      otpExpires,
+    );
     await sendOTP(normalizedEmail, otp);
     return { message: SUCCESS_MESSAGE.OTP_SENT };
   }

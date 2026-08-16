@@ -3,12 +3,12 @@ import { UserRole } from "../../../domain/enum/user/role.enum";
 import { UserStatus } from "../../../domain/enum/user/status.enum";
 
 export const userSchema = new Schema(
-  {       
+  {
     _id: {
       type: Schema.Types.ObjectId,
       auto: true,
     },
-   name: {
+    name: {
       type: String,
       required: true,
       trim: true,
@@ -22,24 +22,24 @@ export const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true, 
+      required: true,
     },
     role: {
       type: String,
       enum: Object.values(UserRole),
       default: UserRole.USER,
     },
-    status:{
-      type:String,
-      enum:Object.values(UserStatus),
-      default:UserStatus.ACTIVE
+    status: {
+      type: String,
+      enum: Object.values(UserStatus),
+      default: UserStatus.ACTIVE,
     },
-     isVerified: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false },
     performanceScore: {
       type: Number,
       default: 0,
     },
-   
+
     projects: [
       {
         type: Schema.Types.ObjectId,
@@ -49,17 +49,14 @@ export const userSchema = new Schema(
     notificationPreferences: {
       emailNotification: {
         type: Boolean,
-       
       },
       pushNotification: {
         type: Boolean,
-       
       },
     },
-  
   },
- 
-{
-    timestamps: true, 
-}
-)
+
+  {
+    timestamps: true,
+  },
+);

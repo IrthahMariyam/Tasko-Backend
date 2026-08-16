@@ -1,5 +1,11 @@
 import { Exclude, Expose } from "class-transformer";
-import { IsEmail, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import {
+  IsEmail,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from "class-validator";
 
 @Exclude()
 export class ResetPasswordDTO {
@@ -11,7 +17,9 @@ export class ResetPasswordDTO {
   @IsString({ message: "Password must be a string" })
   @MinLength(8, { message: "Password must be at least 8 characters" })
   @MaxLength(64, { message: "Password cannot exceed 64 characters" })
-  @Matches(/^(?=.*[A-Z])(?=.*\d)/, { message: "Password must contain 1 uppercase letter and 1 number" })
+  @Matches(/^(?=.*[A-Z])(?=.*\d)/, {
+    message: "Password must contain 1 uppercase letter and 1 number",
+  })
   newPassword!: string;
 
   @Expose()

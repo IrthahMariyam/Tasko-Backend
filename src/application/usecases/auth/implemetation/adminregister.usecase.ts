@@ -11,49 +11,40 @@ import { generateOTP } from "../../../../shared/utils/otp.generate.util.js";
 import { sendOTP } from "../../../../shared/utils/send.otp.util.js";
 import { UserRole } from "../../../../domain/enum/user/role.enum.js";
 
-
 @injectable()
 export class RegisterAdminUseCase implements IAdminRegisterUseCase {
+  constructor(
+    @inject(USER_TYPES.IUserRepository)
+    private _userRepository: IUserRepository,
+  ) {}
 
-    constructor(
-        @inject(USER_TYPES.IUserRepository) private _userRepository: IUserRepository
-    ) { }
+  async execute(dto: AdminRegisterDTO): Promise<{ message: string }> {
+    const email = dto.email.toLowerCase().trim();
+    const existing = await this._userRepository.findByEmail(email);
+    if (existing) throw new Error(ERROR_MESSAGE.USER_ALREADY_EXISTS);
 
-    async execute(dto: AdminRegisterDTO): Promise<{ message: string}> {
+    const hashed = await hashPassword(dto.password);
 
-        const email = dto.email.toLowerCase().trim()
-        const existing = await this._userRepository.findByEmail(email)
-        if (existing) throw new Error(ERROR_MESSAGE.USER_ALREADY_EXISTS)
+    const otp = generateOTP();
+    const otpExpires = Number(process.env.FORGOT_OTP_EXPIRES);
+    await redisClient.setex(
+      `admin.otp:${email}`,
+      otpExpires,
 
+      JSON.stringify({
+        name: dto.name,
+        email,
+        password: hashed,
+        role: UserRole.ADMIN,
+        otp,
+      }),
+    );
 
-        const hashed = await hashPassword(dto.password)
+    await sendOTP(email, otp);
+    console.log(otp);
 
-        const otp = generateOTP()
-       
-        await redisClient.setex(
-            `admin.otp:${email}`,
-            15 * 60,
-
-            JSON.stringify({
-                name: dto.name,
-                email,
-                password: hashed,
-                role: UserRole.ADMIN,
-                 otp
-            })
-
-        )
-
-        await sendOTP(email, otp)
-        console.log(otp);
-
-        return {
-            message: SUCCESS_MESSAGE.OTP_SENT,
+    return {
+      message: SUCCESS_MESSAGE.OTP_SENT,
+    };
+  }
 }
-    }
-}
-
-
-
-
-

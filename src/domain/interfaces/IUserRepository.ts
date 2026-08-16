@@ -9,8 +9,11 @@ export interface IUserRepository {
 
   findAll(): Promise<User[]>;
 
-  findWithQuery(opts: { page: number; limit: number; search?: string }): Promise<{ items: User[]; total: number }>;
+  findWithQuery(opts: {
+    page: number;
+    limit: number;
+    search?: string;
+  }): Promise<{ items: User[]; total: number }>;
 
   update(user: User): Promise<User>;
-
 }

@@ -10,7 +10,10 @@ import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.messa
 
 @injectable()
 export class UpdateMemberStatusUseCase implements IUpdateMemberStatusUseCase {
-  constructor(@inject(USER_TYPES.IUserRepository) private readonly _userRepository: IUserRepository) {}
+  constructor(
+    @inject(USER_TYPES.IUserRepository)
+    private readonly _userRepository: IUserRepository,
+  ) {}
 
   async execute(id: string, status: UserStatus): Promise<{ message: string }> {
     const user = await this._userRepository.findById(id);
@@ -28,6 +31,9 @@ export class UpdateMemberStatusUseCase implements IUpdateMemberStatusUseCase {
 
     await this._userRepository.update(updatedUser);
 
-    return { message: status === UserStatus.BLOCKED ? "User blocked" : "User unblocked" };
+    return {
+      message:
+        status === UserStatus.BLOCKED ? "User blocked" : "User unblocked",
+    };
   }
 }

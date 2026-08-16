@@ -25,14 +25,24 @@ import { USER_TYPES } from "../types/user/user.types";
 
 export const UserModule = new ContainerModule(({ bind }) => {
   bind<IUserRepository>(USER_TYPES.IUserRepository).to(UserRepository);
-  bind<UserPersistenceMapper>(USER_TYPES.UserPersistenceMapper).to(UserPersistenceMapper);
+  bind<UserPersistenceMapper>(USER_TYPES.UserPersistenceMapper).to(
+    UserPersistenceMapper,
+  );
   bind<Model<IUser>>(USER_TYPES.userModel).toConstantValue(UserModel);
   bind<AuthController>(USER_TYPES.AuthController).to(AuthController);
   bind<ILoginUseCase>(USER_TYPES.ILoginUseCase).to(LoginUseCase);
   bind<ILogoutUseCase>(AUTH_TYPES.ILogoutUseCase).to(LogoutUseCase);
-  bind<ISetPassWordUseCase>(AUTH_TYPES.ISetPasswordUseCase).to(SetPasswordUseCase);
-  bind<IForgotPasswordUseCase>(AUTH_TYPES.IForgotPasswordUseCase).to(ForgotPasswordUseCase);
-  bind<IVerifyForgotOtpUseCase>(AUTH_TYPES.IVerifyForgotOtpUseCase).to(VerifyForgotPasswordOtpUseCase);
-  bind<IResetPasswordUseCase>(AUTH_TYPES.IResetPasswordUseCase).to(ResetPasswordUseCase);
+  bind<ISetPassWordUseCase>(AUTH_TYPES.ISetPasswordUseCase).to(
+    SetPasswordUseCase,
+  );
+  bind<IForgotPasswordUseCase>(AUTH_TYPES.IForgotPasswordUseCase).to(
+    ForgotPasswordUseCase,
+  );
+  bind<IVerifyForgotOtpUseCase>(AUTH_TYPES.IVerifyForgotOtpUseCase).to(
+    VerifyForgotPasswordOtpUseCase,
+  );
+  bind<IResetPasswordUseCase>(AUTH_TYPES.IResetPasswordUseCase).to(
+    ResetPasswordUseCase,
+  );
   bind<IRefreshUseCase>(AUTH_TYPES.IRefreshUseCase).to(RefreshUseCase);
 });

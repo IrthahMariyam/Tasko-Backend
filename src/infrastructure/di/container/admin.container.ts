@@ -10,12 +10,18 @@ import { IUpdateMemberStatusUseCase } from "../../../application/usecases/admin/
 import { UpdateMemberStatusUseCase } from "../../../application/usecases/admin/implementation/update.member.usecase";
 import { AdminController } from "../../../presentation/express/controllers/admin.controllers";
 
-
-export const AdminModule = new ContainerModule(({bind})=>{
-bind<IInviteMemberUseCase>(ADMIN_TYPES.IInviteMemberUseCase).to(InviteMemberUseCase)
-bind<IVerifyInvitationUseCase>(ADMIN_TYPES.IVerifyInvitationUseCase).to(VerifyInvitationUseCase)
-bind<IListMembersUseCase>(ADMIN_TYPES.IListMembersUseCase).to(ListMembersUseCase)
-bind<IUpdateMemberStatusUseCase>(ADMIN_TYPES.IUpdateMemberStatusUseCase).to(UpdateMemberStatusUseCase)
-bind<AdminController>(ADMIN_TYPES.AdminController).to(AdminController)
-
+export const AdminModule = new ContainerModule(({ bind }) => {
+  bind<IInviteMemberUseCase>(ADMIN_TYPES.IInviteMemberUseCase).to(
+    InviteMemberUseCase,
+  );
+  bind<IVerifyInvitationUseCase>(ADMIN_TYPES.IVerifyInvitationUseCase).to(
+    VerifyInvitationUseCase,
+  );
+  bind<IListMembersUseCase>(ADMIN_TYPES.IListMembersUseCase).to(
+    ListMembersUseCase,
+  );
+  bind<IUpdateMemberStatusUseCase>(ADMIN_TYPES.IUpdateMemberStatusUseCase).to(
+    UpdateMemberStatusUseCase,
+  );
+  bind<AdminController>(ADMIN_TYPES.AdminController).to(AdminController);
 });

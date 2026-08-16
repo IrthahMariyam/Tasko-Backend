@@ -23,25 +23,20 @@ class PasswordMatchConstraint implements ValidatorConstraintInterface {
   }
 }
 
-@Exclude() 
+@Exclude()
 export class AdminRegisterDTO {
-  
   @Expose()
   @IsString({ message: "Name must be a string" })
   @MinLength(3, { message: "Name must be at least 3 characters" })
   @MaxLength(20, { message: "Name cannot be more than 20 characters" })
   name!: string;
 
-  
-
-  
   @Expose()
   @IsEmail({}, { message: "Invalid email format" })
   email!: string;
 
-  
   @Expose()
-  @IsString({message:"Password must be a string"})
+  @IsString({ message: "Password must be a string" })
   @MinLength(8, { message: "Password must be at least 8 characters long" })
   @MaxLength(20, { message: "Password cannot exceed 20 characters" })
   @Matches(/^(?=.*[A-Z])(?=.*\d)/, {
@@ -49,9 +44,8 @@ export class AdminRegisterDTO {
   })
   password!: string;
 
-  
   @Expose()
-  @IsString({message:"Confirm password must be a string"})
+  @IsString({ message: "Confirm password must be a string" })
   @MinLength(8, { message: "Password must be at least 8 characters long" })
   @MaxLength(20, { message: "Password cannot exceed 20 characters" })
   @Validate(PasswordMatchConstraint)

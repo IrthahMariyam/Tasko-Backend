@@ -1,4 +1,4 @@
 export type RefreshResult = {
-    message?:string;
-    accessToken?:string;
-}
+  message?: string;
+  accessToken?: string;
+};

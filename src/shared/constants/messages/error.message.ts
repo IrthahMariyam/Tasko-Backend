@@ -1,7 +1,7 @@
 export const ERROR_MESSAGE = {
   USER_NOT_FOUND: "User not found",
   USER_ALREADY_VERIFIED: "User already verified",
-  INVALID_PASSWORD: "Invalid password",
+  INVALID_PASSWORD: "Invalid  password",
   ADMIN_BLOCKED: "Your account has been blocked by the admin",
   OTP_EXPIRED: "OTP expired",
   INVALID_OTP: "Invalid OTP",

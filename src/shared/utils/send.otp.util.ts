@@ -3,7 +3,7 @@ import { logger } from "../logger/logger";
 
 export const sendOTP = async (email: string, otp: string) => {
   const transporter = nodemailer.createTransport({
-    service: "gmail", 
+    service: "gmail",
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
@@ -11,7 +11,7 @@ export const sendOTP = async (email: string, otp: string) => {
   });
 
   await transporter.sendMail({
-    from:`Tasko <${process.env.EMAIL_USER}>` ,
+    from: `Tasko <${process.env.EMAIL_USER}>`,
     to: email,
     subject: "Your OTP Code",
     text: `Your OTP is ${otp} expires in 15 minutes. Please do not share this OTP with anyone.`,
