@@ -26,7 +26,7 @@ app.use(
   }),
 );
 app.use(morgan("combined", { stream: httpLogStream }));
-app.use(express.json());
+app.use(express.json({ limit: "6mb" }));
 app.use(cookieParser());
 
 app.get("/", (req, res) => {

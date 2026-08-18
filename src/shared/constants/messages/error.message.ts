@@ -18,7 +18,8 @@ export const ERROR_MESSAGE = {
   ONLY_ADMINS_CAN_INVITE_MEMBERS: "Only admins can invite members",
   ONLY_ADMINS_CAN_VIEW_MEMBERS: "Only admins can view members",
   OTP_VERIFICATION_REQUIRED: "Verify the OTP before resetting your password.",
-  ADMINS_CANNOT_CHANGE_PASSWORD: "Admins can't change their password.",
+  SUPER_ADMINS_CANNOT_CHANGE_PASSWORD:
+    "Super admin accounts can't reset their password.",
   REFRESH_TOKEN_REQUIRED: "Refresh token is required",
   INVALID_REFRESH_TOKEN: "Invalid or expired refresh token",
   REFRESH_TOKEN_INVALIDATED: "Refresh token has been invalidated or expired",

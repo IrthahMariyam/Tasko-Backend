@@ -31,5 +31,8 @@ router.patch("/members/:id/block", authMiddleware, (req, res, next) =>
 router.patch("/members/:id/unblock", authMiddleware, (req, res, next) =>
   adminController.unblockMember(req, res, next),
 );
+router.patch("/members/:id/designation", authMiddleware, (req, res, next) =>
+  adminController.updateMemberDesignation(req, res, next),
+);
 
 export { router as adminRouter };

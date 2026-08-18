@@ -8,6 +8,9 @@ export type AuthResult = {
     email: string;
     role: UserRole;
     status: UserStatus;
+    designation?: string;
+    joiningDate?: Date | string;
+    profileImage?: string;
   };
   accessToken?: string;
   refreshToken?: string;

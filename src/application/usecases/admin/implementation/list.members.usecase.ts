@@ -19,6 +19,9 @@ export class ListMembersUseCase implements IListMembersUseCase {
       name: string;
       email: string;
       role: string;
+      designation: string;
+      joiningDate: string;
+      profileImage: string;
       status: UserStatus;
     }>;
     total: number;
@@ -37,6 +40,11 @@ export class ListMembersUseCase implements IListMembersUseCase {
       name: user.name,
       email: user.email,
       role: user.role,
+      designation: user.designation ?? "",
+      joiningDate: user.joiningDate
+        ? new Date(user.joiningDate).toISOString()
+        : new Date().toISOString(),
+      profileImage: user.profileImage ?? "",
       status: user.status,
     }));
 

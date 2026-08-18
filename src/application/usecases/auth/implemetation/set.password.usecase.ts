@@ -12,7 +12,12 @@ import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.m
 import { hashPassword } from "../../../../shared/utils/password.hash.util";
 import { ISetPassWordUseCase } from "../interface/set.password.interface";
 
-type InvitePayload = { name: string; email: string; role: UserRole };
+type InvitePayload = {
+  name: string;
+  email: string;
+  role: UserRole;
+  designation?: string;
+};
 
 @injectable()
 export class SetPasswordUseCase implements ISetPassWordUseCase {
@@ -34,7 +39,7 @@ export class SetPasswordUseCase implements ISetPassWordUseCase {
     if (!invitation)
       throw new NotFoundError(ERROR_MESSAGE.INVITATION_EXPIRED_OR_INVALID);
 
-    const { name, email, role } = JSON.parse(invitation) as InvitePayload;
+    const { name, email, role, designation } = JSON.parse(invitation) as InvitePayload;
     if (await this.userRepository.findByEmail(email))
       throw new ValidationError(ERROR_MESSAGE.EMAIL_ALREADY_EXISTS);
 
@@ -44,6 +49,8 @@ export class SetPasswordUseCase implements ISetPassWordUseCase {
         email,
         password: await hashPassword(password),
         role,
+        designation: designation ?? "",
+        joiningDate: new Date(),
         status: UserStatus.ACTIVE,
         isVerified: true,
       }),

@@ -1,15 +1,15 @@
 import { inject, injectable } from "inversify";
-import { IAdminRegisterUseCase } from "../interface/admin.register.interface.js";
-import { AdminRegisterDTO } from "../../../dtos/auth/admin.register.dto.js";
-import { USER_TYPES } from "../../../../infrastructure/di/types/user/user.types.js";
-import { IUserRepository } from "../../../../domain/interfaces/IUserRepository.js";
-import { redisClient } from "../../../../infrastructure/providers/redis/redis.provider.js";
-import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.message.js";
-import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message.js";
-import { hashPassword } from "../../../../shared/utils/password.hash.util.js";
-import { generateOTP } from "../../../../shared/utils/otp.generate.util.js";
-import { sendOTP } from "../../../../shared/utils/send.otp.util.js";
-import { UserRole } from "../../../../domain/enum/user/role.enum.js";
+import { IAdminRegisterUseCase } from "../interface/admin.register.interface";
+import { AdminRegisterDTO } from "../../../dtos/auth/admin.register.dto";
+import { USER_TYPES } from "../../../../infrastructure/di/types/user/user.types";
+import { IUserRepository } from "../../../../domain/interfaces/IUserRepository";
+import { redisClient } from "../../../../infrastructure/providers/redis/redis.provider";
+import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.message";
+import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message";
+import { hashPassword } from "../../../../shared/utils/password.hash.util";
+import { generateOTP } from "../../../../shared/utils/otp.generate.util";
+import { sendOTP } from "../../../../shared/utils/send.otp.util";
+import { UserRole } from "../../../../domain/enum/user/role.enum";
 
 @injectable()
 export class RegisterAdminUseCase implements IAdminRegisterUseCase {

@@ -22,8 +22,10 @@ export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
     const normalizedEmail = email.toLowerCase().trim();
     const user = await this.userRepository.findByEmail(normalizedEmail);
     if (!user) throw new NotFoundError(ERROR_MESSAGE.USER_NOT_FOUND);
-    if (user.role === UserRole.ADMIN)
-      throw new ValidationError(ERROR_MESSAGE.ADMINS_CANNOT_CHANGE_PASSWORD);
+    if (user.role === UserRole.SUPER_ADMIN)
+      throw new ValidationError(
+        ERROR_MESSAGE.SUPER_ADMINS_CANNOT_CHANGE_PASSWORD,
+      );
 
     const otp = generateOTP();
     const otpExpires = Number(process.env.FORGOT_OTP_EXPIRES);

@@ -16,7 +16,7 @@ import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.m
 import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
 import { UserStatus } from "../../../../domain/enum/user/status.enum";
 
-const REFRESH_TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60;
+const refreshTokenTtlSeconds = Number(process.env.REFRESH_TOKEN_TTL_SECONDS) 
 
 @injectable()
 export class LoginUseCase implements ILoginUseCase {
@@ -25,6 +25,8 @@ export class LoginUseCase implements ILoginUseCase {
     private _userRepository: IUserRepository,
   ) {}
   async execute(dto: LoginDTO): Promise<AuthResult> {
+  
+
     const email = dto.email.toLowerCase().trim();
     const user = await this._userRepository.findByEmail(email);
     if (!user) throw new NotFoundError(ERROR_MESSAGE.USER_NOT_FOUND);
@@ -47,7 +49,7 @@ export class LoginUseCase implements ILoginUseCase {
       `refresh:${user.email}`,
       refreshToken,
       "EX",
-      REFRESH_TOKEN_TTL_SECONDS,
+      refreshTokenTtlSeconds,
     );
 
     return {
@@ -60,6 +62,9 @@ export class LoginUseCase implements ILoginUseCase {
         email: user.email,
         role: user.role,
         status: user.status,
+        designation: user.designation,
+        joiningDate: user.joiningDate,
+        profileImage: user.profileImage,
       },
     };
   }

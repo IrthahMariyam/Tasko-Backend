@@ -29,6 +29,19 @@ export const userSchema = new Schema(
       enum: Object.values(UserRole),
       default: UserRole.USER,
     },
+    designation: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    joiningDate: {
+      type: Date,
+      default: Date.now,
+    },
+    profileImage: {
+      type: String,
+      default: "",
+    },
     status: {
       type: String,
       enum: Object.values(UserStatus),

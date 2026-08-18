@@ -12,6 +12,7 @@ import { USER_TYPES } from "../../../infrastructure/di/types/user/user.types";
 import { SUCCESS_STATUS } from "../../../shared/constants/status-code/success.status";
 import { CLIENT_ERROR_STATUS } from "../../../shared/constants/status-code/client-error.status";
 import { ERROR_MESSAGE } from "../../../shared/constants/messages/error.message";
+import { IUserRepository } from "../../../domain/interfaces/IUserRepository";
 
 @injectable()
 export class AuthController {
@@ -30,6 +31,8 @@ export class AuthController {
     private readonly resetPasswordUseCase: IResetPasswordUseCase,
     @inject(AUTH_TYPES.IRefreshUseCase)
     private readonly refreshUseCase: IRefreshUseCase,
+    @inject(USER_TYPES.IUserRepository)
+    private readonly userRepository: IUserRepository,
   ) {}
 
   async login(req: Request, res: Response, next: NextFunction) {
@@ -147,13 +150,68 @@ export class AuthController {
     }
   }
 
+  async updateProfileImage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const profileImage = req.body.profileImage;
+      if (
+        !req.user?.id ||
+        typeof profileImage !== "string" ||
+        !profileImage.startsWith("data:image/") ||
+        profileImage.length > 5 * 1024 * 1024
+      ) {
+        return res.status(CLIENT_ERROR_STATUS.BAD_REQUEST).json({
+          success: false,
+          message: "Please upload an image smaller than 4 MB.",
+        });
+      }
+
+      const user = await this.userRepository.findById(req.user.id);
+      if (!user) {
+        return res.status(CLIENT_ERROR_STATUS.NOT_FOUND).json({
+          success: false,
+          message: ERROR_MESSAGE.USER_NOT_FOUND,
+        });
+      }
+
+      user.setProfileImage(profileImage);
+      const updatedUser = await this.userRepository.update(user);
+
+      return res.status(SUCCESS_STATUS.OK).json({
+        success: true,
+        data: {
+          user: {
+            id: updatedUser.id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            role: updatedUser.role,
+            status: updatedUser.status,
+            designation: updatedUser.designation,
+            joiningDate: updatedUser.joiningDate,
+            profileImage: updatedUser.profileImage,
+          },
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async logout(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await this.logoutUseCase.execute({
+      await this.logoutUseCase.execute({
         refreshToken: req.cookies.refreshToken,
       });
-      res.clearCookie("refreshToken");
-      return res.json(result);
+      res.clearCookie("accessToken", {
+        httpOnly: true,
+        sameSite: "strict",
+        path: "/",
+      });
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        sameSite: "strict",
+        path: "/",
+      });
+      return res.json({ success: true, message: "Logged out successfully" });
     } catch (error) {
       next(error);
     }

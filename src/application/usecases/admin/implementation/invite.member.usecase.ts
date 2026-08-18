@@ -38,6 +38,7 @@ export class InviteMemberUseCase implements IInviteMemberUseCase {
         name: dto.name,
         email,
         role: dto.role,
+        designation: dto.designation,
         invitedBy,
       }),
 
@@ -46,13 +47,16 @@ export class InviteMemberUseCase implements IInviteMemberUseCase {
     );
 
     const frontendUrl = process.env.FRONTEND_URL;
+    if (!frontendUrl) {
+      throw new InternalLServerError("FRONTEND_URL is not configured.");
+    }
 
-    const inviteLink = `${frontendUrl}/member/accept?token=${token}`;
+    const inviteLink = `${frontendUrl.replace(/\/$/, "")}/member/accept?token=${token}`;
     await sendInviteEmail(email, inviteLink);
 
     return {
       message: SUCCESS_MESSAGE.INVITATION_SENT,
-      inviteLink: inviteLink,
+      inviteLink,
     };
   }
 }

@@ -10,6 +10,9 @@ export class User {
   private _password: string;
   private _role: UserRole;
   private _status: UserStatus;
+  private _designation: string;
+  private _joiningDate: Date;
+  private _profileImage: string;
   public isVerified: boolean = false;
   public createdAt: Date = new Date();
   public updatedAt: Date = new Date();
@@ -21,6 +24,9 @@ export class User {
     password: string;
     role: UserRole;
     status: UserStatus;
+    designation?: string;
+    joiningDate?: Date;
+    profileImage?: string;
     isVerified?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
@@ -31,6 +37,9 @@ export class User {
     this._password = props.password;
     this._role = props.role;
     this._status = props.status;
+    this._designation = props.designation ?? "";
+    this._joiningDate = props.joiningDate ?? new Date();
+    this._profileImage = props.profileImage ?? "";
     this.isVerified = props.isVerified ?? false;
     this.createdAt = props.createdAt ?? new Date();
     this.updatedAt = props.updatedAt ?? new Date();
@@ -42,6 +51,9 @@ export class User {
     password: string;
     role: UserRole;
     status: UserStatus;
+    designation?: string;
+    joiningDate?: Date;
+    profileImage?: string;
     isVerified: boolean;
   }): User {
     return new User({
@@ -51,6 +63,9 @@ export class User {
       password: props.password,
       role: props.role,
       status: props.status,
+      designation: props.designation,
+      joiningDate: props.joiningDate,
+      profileImage: props.profileImage,
       isVerified: props.isVerified,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -75,6 +90,15 @@ export class User {
   get status() {
     return this._status;
   }
+  get designation() {
+    return this._designation;
+  }
+  get joiningDate() {
+    return this._joiningDate;
+  }
+  get profileImage() {
+    return this._profileImage;
+  }
 
   async gethashedPassword() {
     return await hashPassword(this.password);
@@ -83,9 +107,20 @@ export class User {
     this._password = newPassword;
     this.updatedAt = new Date();
   }
+  setDesignation(value: string) {
+    this._designation = value;
+    this.updatedAt = new Date();
+  }
+  setProfileImage(value: string) {
+    this._profileImage = value;
+    this.updatedAt = new Date();
+  }
+  setJoiningDate(value: Date) {
+    this._joiningDate = value;
+    this.updatedAt = new Date();
+  }
 
   isBlocked(): boolean {
-    // if(this._status === UserStatus.BLOCKED) throw new Error(ERROR_MESSAGE.ADMIN_BLOCKED)
     return this._status === UserStatus.BLOCKED;
   }
 
@@ -99,6 +134,9 @@ export class User {
     return this.isVerified && this.status === UserStatus.ACTIVE;
   }
   isAdmin(): boolean {
-    return this.role === UserRole.ADMIN;
+    return this.role === UserRole.ADMIN || this.role === UserRole.SUPER_ADMIN;
+  }
+  isSuperAdmin(): boolean {
+    return this.role === UserRole.SUPER_ADMIN;
   }
 }

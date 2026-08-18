@@ -15,6 +15,11 @@ export class InviteMemberDTO {
   email!: string;
 
   @Expose()
+  @IsString({ message: "Designation must be a string" })
+  @IsNotEmpty({ message: "Designation is required" })
+  designation!: string;
+
+  @Expose()
   @IsEnum(UserRole, { message: "Role must be ADMIN or USER" })
   @IsNotEmpty({ message: "Role is required" })
   role!: UserRole;

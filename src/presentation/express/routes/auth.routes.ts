@@ -4,7 +4,6 @@ import { USER_TYPES } from "../../../infrastructure/di/types/user/user.types";
 import { AuthController } from "../../../presentation/express/controllers/auth.controller";
 import { validateDto } from "../middlewares/validate-dto.middleware";
 import { LoginDTO } from "../../../application/dtos/auth/login.dto";
-import { LogoutDTO } from "../../../application/dtos/auth/logout.register.dto";
 import { SetPasswordDTO } from "../../../application/dtos/auth/set.password.dto";
 import { ForgotPasswordDTO } from "../../../application/dtos/auth/forgot.password.dto";
 import { VerifyForgotOtpDTO } from "../../../application/dtos/auth/verify.forgototp.dto";
@@ -41,7 +40,7 @@ router.post(
 router.post("/set-password", validateDto(SetPasswordDTO), (req, res, next) =>
   authController.setPassword(req, res, next),
 );
-router.post("/logout", validateDto(LogoutDTO), (req, res, next) =>
+router.post("/logout", (req, res, next) =>
   authController.logout(req, res, next),
 );
 router.post("/refresh", (req, res, next) =>
@@ -49,5 +48,8 @@ router.post("/refresh", (req, res, next) =>
 );
 router.get("/me", authMiddleware, (req, res, next) =>
   authController.me(req, res, next),
+);
+router.patch("/profile/image", authMiddleware, (req, res, next) =>
+  authController.updateProfileImage(req, res, next),
 );
 export { router as authRouter };
