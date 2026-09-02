@@ -9,10 +9,10 @@ import { LoginUseCase } from "../../../application/usecases/auth/implemetation/l
 import { LogoutUseCase } from "../../../application/usecases/auth/implemetation/logout.usecase";
 import { RefreshUseCase } from "../../../application/usecases/auth/implemetation/refresh.usecase";
 import { IForgotPasswordUseCase } from "../../../application/usecases/auth/interface/forgot.password.interface";
-import { IVerifyForgotOtpUseCase } from "../../../application/usecases/auth/interface/verifyforgot.otp.interface";
+import { IVerifyOtpUseCase } from "../../../application/usecases/auth/interface/verifyforgot.otp.interface";
 import { IResetPasswordUseCase } from "../../../application/usecases/auth/interface/reset.password.interface";
 import { ForgotPasswordUseCase } from "../../../application/usecases/auth/implemetation/forgot.password.usecase";
-import { VerifyForgotPasswordOtpUseCase } from "../../../application/usecases/auth/implemetation/verifyforgototp.usecase";
+import { VerifyOtpUseCase } from "../../../application/usecases/auth/implemetation/verifyforgototp.usecase";
 import { ResetPasswordUseCase } from "../../../application/usecases/auth/implemetation/reset.password.usecase";
 import { IUserRepository } from "../../../domain/interfaces/IUserRepository";
 import { AuthController } from "../../../presentation/express/controllers/auth.controller";
@@ -38,8 +38,8 @@ export const UserModule = new ContainerModule(({ bind }) => {
   bind<IForgotPasswordUseCase>(AUTH_TYPES.IForgotPasswordUseCase).to(
     ForgotPasswordUseCase,
   );
-  bind<IVerifyForgotOtpUseCase>(AUTH_TYPES.IVerifyForgotOtpUseCase).to(
-    VerifyForgotPasswordOtpUseCase,
+  bind<IVerifyOtpUseCase>(AUTH_TYPES.IVerifyOtpUseCase).to(
+    VerifyOtpUseCase,
   );
   bind<IResetPasswordUseCase>(AUTH_TYPES.IResetPasswordUseCase).to(
     ResetPasswordUseCase,

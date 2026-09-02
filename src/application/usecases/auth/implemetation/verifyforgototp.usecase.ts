@@ -4,10 +4,10 @@ import { ERROR_MESSAGE } from "../../../../shared/constants/messages/error.messa
 import { SUCCESS_MESSAGE } from "../../../../shared/constants/messages/success.message";
 import { NotFoundError } from "../../../../shared/utils/error-handling/errors/not.found.error";
 import { ValidationError } from "../../../../shared/utils/error-handling/errors/validation.error";
-import { IVerifyForgotOtpUseCase } from "../interface/verifyforgot.otp.interface";
+import { IVerifyOtpUseCase } from "../interface/verifyforgot.otp.interface";
 
 @injectable()
-export class VerifyForgotPasswordOtpUseCase implements IVerifyForgotOtpUseCase {
+export class VerifyOtpUseCase implements IVerifyOtpUseCase {
   async execute({
     email,
     otp,

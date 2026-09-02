@@ -9,6 +9,8 @@ import { ForgotPasswordDTO } from "../../../application/dtos/auth/forgot.passwor
 import { VerifyForgotOtpDTO } from "../../../application/dtos/auth/verify.forgototp.dto";
 import { ResetPasswordDTO } from "../../../application/dtos/auth/reset.password.dto";
 import { authMiddleware } from "../middlewares/auth.middleware";
+import { comparePassword, hashPassword } from "../../../shared/utils/password.hash.util";
+import { UserModel } from "../../../infrastructure/db/models/user.model";
 
 const router = Router();
 
@@ -28,12 +30,40 @@ router.post(
   (req, res, next) => authController.forgotPassword(req, res, next),
 );
 router.post(
-  "/verify-forgot-otp",
+  "/verify-otp",
   validateDto(VerifyForgotOtpDTO),
-  (req, res, next) => authController.verifyForgotOtp(req, res, next),
+  (req, res, next) => authController.verifyOtp(req, res, next),
 );
 router.post(
   "/reset-password",
+  validateDto(ResetPasswordDTO),
+  (req, res, next) => authController.resetPassword(req, res, next),
+);
+router.post(
+  "/change-password/send-otp",
+  authMiddleware,
+  (req, res, next) => {
+    req.body = { email: req.user!.email };
+    authController.forgotPassword(req, res, next);
+  },
+);
+router.post(
+  "/change-password/verify-otp",
+  authMiddleware,
+  (req, res, next) => {
+    req.body = { ...req.body, email: req.user!.email };
+    next();
+  },
+  validateDto(VerifyForgotOtpDTO),
+  (req, res, next) => authController.verifyOtp(req, res, next),
+);
+router.post(
+  "/change-password/reset",
+  authMiddleware,
+  (req, res, next) => {
+    req.body = { ...req.body, email: req.user!.email };
+    next();
+  },
   validateDto(ResetPasswordDTO),
   (req, res, next) => authController.resetPassword(req, res, next),
 );
@@ -53,3 +83,5 @@ router.patch("/profile/image", authMiddleware, (req, res, next) =>
   authController.updateProfileImage(req, res, next),
 );
 export { router as authRouter };
+
+router.patch("/profile/password", authMiddleware, async (req, res, next) => { try { const { currentPassword, newPassword, confirmPassword } = req.body; if (!req.user?.id || !currentPassword || !newPassword || newPassword.length < 8 || newPassword !== confirmPassword) return res.status(400).json({ success: false, message: "Check your password details." }); const user = await UserModel.findById(req.user.id); if (!user || !(await comparePassword(currentPassword, user.password))) return res.status(400).json({ success: false, message: "Current password is incorrect." }); user.password = await hashPassword(newPassword); await user.save(); return res.json({ success: true, message: "Password changed successfully." }); } catch (error) { next(error); } });

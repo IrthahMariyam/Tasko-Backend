@@ -1,5 +1,6 @@
 export const ERROR_MESSAGE = {
   USER_NOT_FOUND: "User not found",
+  PROFILE_IMAGE_INVALID: "Please upload an image smaller than 4 MB.",
   USER_ALREADY_VERIFIED: "User already verified",
   INVALID_PASSWORD: "Invalid  password",
   ADMIN_BLOCKED: "Your account has been blocked by the admin",
@@ -16,6 +17,7 @@ export const ERROR_MESSAGE = {
   INVALID_USER_ID: "Invalid user id",
   VALIDATION_FAILED: "Validation failed",
   ONLY_ADMINS_CAN_INVITE_MEMBERS: "Only admins can invite members",
+  ONLY_SUPER_ADMINS_CAN_INVITE_ADMINS: "Super admin can invite admins only.",
   ONLY_ADMINS_CAN_VIEW_MEMBERS: "Only admins can view members",
   OTP_VERIFICATION_REQUIRED: "Verify the OTP before resetting your password.",
   SUPER_ADMINS_CANNOT_CHANGE_PASSWORD:
@@ -23,4 +25,8 @@ export const ERROR_MESSAGE = {
   REFRESH_TOKEN_REQUIRED: "Refresh token is required",
   INVALID_REFRESH_TOKEN: "Invalid or expired refresh token",
   REFRESH_TOKEN_INVALIDATED: "Refresh token has been invalidated or expired",
+  INVALID_EMAIL: "Invalid email address",
+  INVALID_PASSWORD_FORMAT:
+    "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+  INVALID_DESIGNATION: "Select a valid designation.",
 };

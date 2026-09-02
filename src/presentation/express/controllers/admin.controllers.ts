@@ -14,6 +14,7 @@ import { UserRole } from "../../../domain/enum/user/role.enum";
 import { ValidationError } from "../../../shared/utils/error-handling/errors/validation.error";
 import { IUserRepository } from "../../../domain/interfaces/IUserRepository";
 import { USER_TYPES } from "../../../infrastructure/di/types/user/user.types";
+import { DesignationModel } from "../../../infrastructure/db/models/designation.model";
 
 @injectable()
 export class AdminController {
@@ -42,11 +43,11 @@ export class AdminController {
       const requestedRole = (req.body.role as string | undefined)?.toUpperCase();
 
       if (currentRole === UserRole.SUPER_ADMIN && requestedRole !== UserRole.ADMIN) {
-        throw new ValidationError("Super admin can invite admins only.");
+        throw new ValidationError(ERROR_MESSAGE.ONLY_SUPER_ADMINS_CAN_INVITE_ADMINS);
       }
 
       if (currentRole === UserRole.ADMIN && requestedRole !== UserRole.USER) {
-        throw new ValidationError("Admins can invite employees only.");
+        throw new ValidationError(ERROR_MESSAGE.ONLY_ADMINS_CAN_INVITE_MEMBERS);
       }
 
       if (currentRole !== UserRole.ADMIN && currentRole !== UserRole.SUPER_ADMIN) {
@@ -55,6 +56,13 @@ export class AdminController {
           message: ERROR_MESSAGE.ONLY_ADMINS_CAN_INVITE_MEMBERS,
         });
       }
+
+      const designation = String(req.body.designation ?? "").trim().replace(/\s+/g, " ").toUpperCase();
+      const designationExists = designation && await DesignationModel.exists({ name: { $regex: `^${designation.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, $options: "i" } });
+      if (!designationExists) {
+        throw new ValidationError(ERROR_MESSAGE.INVALID_DESIGNATION);
+      }
+      req.body.designation = designation;
 
       const result = await this._inviteMemberUseCase.execute(
         req.body,
@@ -180,7 +188,7 @@ export class AdminController {
   ) {
     try {
       const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-      const designation = (req.body.designation as string | undefined)?.trim();
+      const designation = String(req.body.designation ?? "").trim().replace(/\s+/g, " ").toUpperCase();
 
       if (!id || !designation) {
         return res.status(CLIENT_ERROR_STATUS.BAD_REQUEST).json({
@@ -210,6 +218,13 @@ export class AdminController {
             ? "Admins can edit employee designations only."
             : "Super admins can edit admin designations only.",
         );
+      }
+
+      const designationExists = await DesignationModel.exists({
+        name: { $regex: `^${designation.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, $options: "i" },
+      });
+      if (!designationExists) {
+        throw new ValidationError("Select a valid designation.");
       }
 
       member.setDesignation(designation);

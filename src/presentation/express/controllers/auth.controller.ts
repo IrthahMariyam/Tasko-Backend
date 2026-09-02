@@ -5,14 +5,16 @@ import { ILogoutUseCase } from "../../../application/usecases/auth/interface/log
 import { ISetPassWordUseCase } from "../../../application/usecases/auth/interface/set.password.interface";
 import { IRefreshUseCase } from "../../../application/usecases/auth/interface/refresh.interface";
 import { IForgotPasswordUseCase } from "../../../application/usecases/auth/interface/forgot.password.interface";
-import { IVerifyForgotOtpUseCase } from "../../../application/usecases/auth/interface/verifyforgot.otp.interface";
+import { IVerifyOtpUseCase } from "../../../application/usecases/auth/interface/verifyforgot.otp.interface";
 import { IResetPasswordUseCase } from "../../../application/usecases/auth/interface/reset.password.interface";
 import { AUTH_TYPES } from "../../../infrastructure/di/types/auth/auth.types";
 import { USER_TYPES } from "../../../infrastructure/di/types/user/user.types";
 import { SUCCESS_STATUS } from "../../../shared/constants/status-code/success.status";
-import { CLIENT_ERROR_STATUS } from "../../../shared/constants/status-code/client-error.status";
 import { ERROR_MESSAGE } from "../../../shared/constants/messages/error.message";
+import { CLIENT_ERROR_STATUS } from "../../../shared/constants/status-code/client-error.status";
+import { SUCCESS_MESSAGE } from "../../../shared/constants/messages/success.message";
 import { IUserRepository } from "../../../domain/interfaces/IUserRepository";
+
 
 @injectable()
 export class AuthController {
@@ -25,8 +27,8 @@ export class AuthController {
     private readonly setPasswordUseCase: ISetPassWordUseCase,
     @inject(AUTH_TYPES.IForgotPasswordUseCase)
     private readonly forgotPasswordUseCase: IForgotPasswordUseCase,
-    @inject(AUTH_TYPES.IVerifyForgotOtpUseCase)
-    private readonly verifyForgotOtpUseCase: IVerifyForgotOtpUseCase,
+    @inject(AUTH_TYPES.IVerifyOtpUseCase)
+    private readonly verifyOtpUseCase: IVerifyOtpUseCase,
     @inject(AUTH_TYPES.IResetPasswordUseCase)
     private readonly resetPasswordUseCase: IResetPasswordUseCase,
     @inject(AUTH_TYPES.IRefreshUseCase)
@@ -90,9 +92,9 @@ export class AuthController {
     }
   }
 
-  async verifyForgotOtp(req: Request, res: Response, next: NextFunction) {
+  async verifyOtp(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await this.verifyForgotOtpUseCase.execute(req.body);
+      const result = await this.verifyOtpUseCase.execute(req.body);
       return res
         .status(SUCCESS_STATUS.OK)
         .json({ success: true, message: result.message });
@@ -157,11 +159,11 @@ export class AuthController {
         !req.user?.id ||
         typeof profileImage !== "string" ||
         !profileImage.startsWith("data:image/") ||
-        profileImage.length > 5 * 1024 * 1024
+        profileImage.length > Number(process.env.IMAGE_LENGTH)
       ) {
         return res.status(CLIENT_ERROR_STATUS.BAD_REQUEST).json({
           success: false,
-          message: "Please upload an image smaller than 4 MB.",
+          message: ERROR_MESSAGE.PROFILE_IMAGE_INVALID,
         });
       }
 
@@ -211,7 +213,7 @@ export class AuthController {
         sameSite: "strict",
         path: "/",
       });
-      return res.json({ success: true, message: "Logged out successfully" });
+      return res.json({ success: true, message: SUCCESS_MESSAGE.LOGOUT_SUCCESS });
     } catch (error) {
       next(error);
     }
